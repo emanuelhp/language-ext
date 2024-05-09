@@ -28,10 +28,10 @@ namespace LanguageExt.Sys
         readonly Atom<Entry> machine = Atom<Entry>(new FolderEntry("[machine]", DateTime.MinValue, DateTime.MinValue, DateTime.MinValue, default));
         readonly static char[] invalidPath = Path.GetInvalidPathChars();
         readonly static char[] invalidFile = Path.GetInvalidFileNameChars();
-        public string CurrentDir = "C:\\";
+        public string CurrentDir = Path.GetPathRoot(Path.GetTempPath());
 
         public MemoryFS() =>
-            AddLogicalDrive("C");
+            AddLogicalDrive(CurrentDir.Substring(0, Math.Min(2, CurrentDir.Length)));
 
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LanguageExt.Sys
         /// Add a logical in-memory drive
         /// </summary>
         public Unit AddLogicalDrive(string name) =>
-            CreateFolder($"{name.TrimEnd(':')}:", DateTime.MinValue);
+            CreateFolder(name, DateTime.MinValue);
 
         Seq<string> ParsePath(string path) =>
             System.IO.Path.IsPathRooted(path)
